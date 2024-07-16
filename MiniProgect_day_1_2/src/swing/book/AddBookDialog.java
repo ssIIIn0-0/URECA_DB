@@ -15,6 +15,7 @@ public class AddBookDialog extends JDialog{
 	
 	
 	public AddBookDialog(JFrame parent, DefaultTableModel tableModel) {
+		setTitle("Book Add Dialog");
 		setSize(300, 200);
 		setLayout(new GridLayout(5, 2));
 		setLocationRelativeTo(parent);	// 부모에 맞게 위치 조정
@@ -48,6 +49,8 @@ public class AddBookDialog extends JDialog{
 			String price = priceField.getText();
 			
 			tableModel.addRow(new Object[] {bookId, bookName, publisher, price});
+			
+			dispose();	// 실행 후 창 자동 닫기
 		});
 	}
 }

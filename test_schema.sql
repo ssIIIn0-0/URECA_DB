@@ -7,7 +7,7 @@ create table customer (
 create table customer_order (
   order_id int not null,
   customer_id int default null,
-  product_id int default null,
+  product_id int default null,book
   product_id int default null,
   order_price int default null,
   primary key (order_id)

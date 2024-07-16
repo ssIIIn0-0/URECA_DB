@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;	// windows application
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -58,15 +59,25 @@ public class BookManager extends JFrame{
 			addDialog.setVisible(true);
 		});
 		
-		editButton.addActionListener(new ActionListener(){
-			// event 객체를 받아서 처리하는 로직을 가진 객체 <= ActionListener()
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// 버튼을 누르면 실행되는 부분
-				System.out.println("editButton!!");
-				
+//		editButton.addActionListener(new ActionListener(){
+//			// event 객체를 받아서 처리하는 로직을 가진 객체 <= ActionListener()
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// 버튼을 누르면 실행되는 부분
+//				System.out.println("editButton!!");
+//			}
+//		});
+		
+		editButton.addActionListener(e -> {
+			// table에 선택된 row가 있으면 EditBookDialog를 띄운다.
+			// table에 선택된 row
+			int selectedRow = table.getSelectedRow();
+			if(selectedRow >= 0) {
+				EditBookDialog editDialog = new EditBookDialog(this, this.tableModel, selectedRow);
+				editDialog.setVisible(true);
+			}else {
+				JOptionPane.showMessageDialog(this,  "도서를 선택하세요.");
 			}
-			
 		});
 	}
 	
