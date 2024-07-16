@@ -23,6 +23,8 @@ public class BookManager extends JFrame{
 		setTitle("Book Manager");
 		setSize(600, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// 화면 중심에 오도록 설정
+		setLocationRelativeTo(null);
 		
 		// table
 		// 문자열의 배열인데, Object로 나타내는거임
@@ -52,7 +54,7 @@ public class BookManager extends JFrame{
 		addButton.addActionListener(e -> {
 //			System.out.println("addButton!!");
 			// AddBookDialog를 띄운다.
-			AddBookDialog addDialog = new AddBookDialog(tableModel);
+			AddBookDialog addDialog = new AddBookDialog(this, this.tableModel);
 			addDialog.setVisible(true);
 		});
 		

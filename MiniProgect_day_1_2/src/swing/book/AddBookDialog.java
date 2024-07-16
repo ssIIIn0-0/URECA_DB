@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +14,10 @@ public class AddBookDialog extends JDialog{
 	private JButton addButton;
 	
 	
-	public AddBookDialog(DefaultTableModel tableModel) {
+	public AddBookDialog(JFrame parent, DefaultTableModel tableModel) {
 		setSize(300, 200);
 		setLayout(new GridLayout(5, 2));
+		setLocationRelativeTo(parent);	// 부모에 맞게 위치 조정
 		
 		// field
 		bookIdField = new JTextField();
