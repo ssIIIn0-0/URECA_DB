@@ -23,65 +23,107 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Matching.dao.UserDAO;
+import Matching.dto.InterestDTO;
 import Matching.dto.UserDTO;
 
 public class MainFrameManager extends JFrame {
 
-	private JTable table; // grid ui component
-	private DefaultTableModel tableModel; // grid data
-	private JButton signUpButton, signInButton;
-	private JTextField nameField, passwordField;
+//	private JTable table; // grid ui component
+//	private DefaultTableModel tableModel; // grid data
+//	private JButton signUpButton, signInButton;
+//	private JTextField idField, passwordField;
 	private UserDAO userDao = new UserDAO();
-	
-    public MainFrameManager() {
+	private JPanel mainPanel;
 
-    	// 기본 화면 UI
-        setTitle("Interest Based User Recommendation");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+	public MainFrameManager() {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+		// 기본 화면 UI
+		setTitle("Interest Based User Recommendation");
+		setSize(800, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
 
-        JLabel nameLabel = new JLabel("Name:");
-        nameField = new JTextField();
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordField = new JPasswordField();
+		mainPanel = new JPanel();
+		showLoginPanel();
 
+		add(mainPanel, BorderLayout.CENTER);
+	}
+
+	private void showLoginPanel() {
+		mainPanel.removeAll();
+		mainPanel.setLayout(new GridLayout(4, 2));
+		
+		// 로그인 화면
+		JLabel idLabel = new JLabel("ID");
+        JTextField idField = new JTextField();
+        JLabel passwordLabel = new JLabel("Password");
+        JPasswordField passwordField = new JPasswordField();
         
-        signUpButton = new JButton("sign up");
-        signInButton = new JButton("sign in");
-        
-        // button action event
-        signUpButton.addActionListener(e -> {
-        	SignUpDialog signupDialog = new SignUpDialog(this, this.tableModel);
-        	signupDialog.setVisible(true);
+        JButton signUpButton = new JButton("sign up");
+		JButton signInButton = new JButton("sign in");
+
+		// button action event
+		signUpButton.addActionListener(e -> {
+			SignUpDialog signupDialog = new SignUpDialog(this);
+			signupDialog.setVisible(true);
 		});
 
-        panel.add(nameLabel);
-        panel.add(nameField);
-        panel.add(passwordLabel);
-        panel.add(passwordField);
-        panel.add(signUpButton);
-        panel.add(signInButton);
+		signInButton.addActionListener(e -> {
+			String Id = idField.getText();
+			String PassWord = new String(passwordField.getPassword());
+			
+			if (Id.isBlank() || PassWord.isBlank()) {
+				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력하세요.");
+			}
 
-        add(panel, BorderLayout.CENTER);
-    }
+			try {
+				UserDTO user = userDao.getUserByID(Id);
+				if (user == null) {
+					JOptionPane.showMessageDialog(this, "조회되지 않는 아이디 입니다.");
+				} else if (!user.getPassword().equals(PassWord)) {
+					JOptionPane.showMessageDialog(this, "비밀번호가 틀렸습니다.");
+				} else {
+					showInterestPanel();
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Error during login", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 
-    void signupUser (UserDTO userdto){
+		mainPanel.add(idLabel);
+		mainPanel.add(idField);
+		mainPanel.add(passwordLabel);
+		mainPanel.add(passwordField);
+		mainPanel.add(signUpButton);
+		mainPanel.add(signInButton);
+
+		mainPanel.revalidate();
+        mainPanel.repaint();
+	}
+
+	void signupUser(UserDTO userdto) {
 		int ret = userDao.addUser(userdto);
 		if (ret == 1) {
 			System.out.println("sign up successful");
 		}
 	}
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrameManager().setVisible(true);
-            }
-        });
-    }
+
+	private void showInterestPanel() {
+		mainPanel.removeAll();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(new InterestPanel(this), BorderLayout.CENTER);
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new MainFrameManager().setVisible(true);
+			}
+		});
+	}
 }

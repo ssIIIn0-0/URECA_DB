@@ -146,11 +146,11 @@ public class BookManager extends JFrame {
 		}
 	}
 
-	private void listBook(String searchWor) {
+	private void listBook(String searchWord) {
 		// 현재 tableModel 을 정리하고
 		clearTable();
 
-		List<Book> bookList = bookDao.listBook(searchWor);
+		List<Book> bookList = bookDao.listBook(searchWord);
 
 		for (Book book : bookList) {
 			tableModel.addRow(

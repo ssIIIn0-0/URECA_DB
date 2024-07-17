@@ -12,29 +12,58 @@ import Matching.common.DBManager;
 
 public class UserDAO {
 
-	public int addUser(UserDTO user){
+	public int addUser(UserDTO user) {
 		int ret = -1;
 		String sql = "INSERT INTO Users VALUES (?, ?, ?, ?);";
-		
+
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
-			
+
 			pstmt.setString(1, user.getUserId());
 			pstmt.setString(2, user.getName());
 			pstmt.setString(3, user.getEmail());
 			pstmt.setString(4, user.getPassword());
-			
+
 			ret = pstmt.executeUpdate();
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBManager.releaseConnection(pstmt, con);
 		}
-		
+
 		return ret;
 	}
+
+	public UserDTO getUserByID(String id) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE user_id = ?";
+        
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = DBManager.getConnection();
+            pstmt = con.prepareStatement(sql);
+            
+            pstmt.setString(1, id);
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                UserDTO user = new UserDTO();
+                user.setUserId(rs.getString("user_id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                return user;
+            }
+        } finally {
+            DBManager.releaseConnection(rs, pstmt, con);
+        }
+        return null;
+    }
+
 }

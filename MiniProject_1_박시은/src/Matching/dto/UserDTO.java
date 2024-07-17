@@ -8,6 +8,8 @@ public class UserDTO {
     private String email;
     private String password;
     
+    public UserDTO() {}
+    
 	public UserDTO(String userId, String name, String email, String password) {
 		super();
 		this.userId = userId;

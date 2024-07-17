@@ -8,7 +8,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
 import Matching.dto.UserDTO;
 import Matching.ui.MainFrameManager;
@@ -17,8 +16,8 @@ public class SignUpDialog extends JDialog {
 	private JTextField userIdField, nameField, emailField, passWordField;
 	private JButton signupButton;
 
-	public SignUpDialog(MainFrameManager parent, DefaultTableModel tableModel) {
-		setTitle("Book Add Dialog");
+	public SignUpDialog(MainFrameManager parent) {
+		setTitle("Sign Up Dialog");
 		setSize(300, 200);
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(parent); // 부모에 맞게
