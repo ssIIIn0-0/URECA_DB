@@ -6,15 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import app.book.common.DBManager;
 import app.book.dto.Book;
 
-// madang db 에 있는 book table에 대한 CRUD 관련 기능
+// book table 에 대한 crud
 public class BookDao {
 	public int insertBook(Book book) {
 		int ret = -1;
-		String sql = "insert into book values ( ?, ?, ?, ?);";
+		String sql = "insert into book values ( ?, ?, ?, ? ); ";
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -28,6 +27,8 @@ public class BookDao {
 			pstmt.setString(3, book.getPublisher());
 			pstmt.setInt(4, book.getPrice());
 
+			ret = pstmt.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -39,8 +40,7 @@ public class BookDao {
 
 	public int updateBook(Book book) {
 		int ret = -1;
-
-		String sql = "update book set bookname = ?, publisher = ?, price = ? where bookid = ?;";
+		String sql = "update book set bookname = ?, publisher = ?, price = ? where bookid = ?; ";
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -48,11 +48,12 @@ public class BookDao {
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
-
 			pstmt.setString(1, book.getBookName());
 			pstmt.setString(2, book.getPublisher());
 			pstmt.setInt(3, book.getPrice());
 			pstmt.setInt(4, book.getBookId());
+
+			ret = pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,8 +66,7 @@ public class BookDao {
 
 	public int deleteBook(int bookId) {
 		int ret = -1;
-
-		String sql = "delete from book where bookid = ?;";
+		String sql = "delete from book where bookid = ?; ";
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -74,7 +74,6 @@ public class BookDao {
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
-
 			pstmt.setInt(1, bookId);
 
 			ret = pstmt.executeUpdate();
@@ -91,7 +90,7 @@ public class BookDao {
 	public List<Book> listBook() {
 		List<Book> list = new ArrayList<>();
 
-		String sql = "select * from book;";
+		String sql = "select * from book; ";
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -103,7 +102,6 @@ public class BookDao {
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				// 가져가야할 데이터가 있다는 뜻
 				Book book = new Book();
 				book.setBookId(rs.getInt("bookid"));
 				book.setBookName(rs.getString("bookname"));
@@ -111,6 +109,7 @@ public class BookDao {
 				book.setPrice(rs.getInt("price"));
 				list.add(book);
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -140,7 +139,7 @@ public class BookDao {
 				book = new Book();
 				book.setBookId(rs.getInt("bookid"));
 				book.setBookName(rs.getString("bookname"));
-				book.setPublisher(rs.getString("pulisher"));
+				book.setPublisher(rs.getString("publisher"));
 				book.setPrice(rs.getInt("price"));
 			}
 

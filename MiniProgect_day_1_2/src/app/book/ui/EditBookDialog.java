@@ -1,71 +1,87 @@
 package app.book.ui;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import app.book.dto.Book;
 
-public class EditBookDialog extends JDialog{
+public class EditBookDialog extends JDialog {
 	private JTextField bookIdField, bookNameField, publisherField, priceField;
-	private JButton saveButton;
-	
-	
-	public EditBookDialog(JFrame parent, DefaultTableModel tableModel, int rowIndex) {	// 선택된 row index
-		setTitle("Book Save Dialog");
+	private JButton updateButton, deleteButton;
+
+	public EditBookDialog(BookManager parent, DefaultTableModel tableModel, int rowIndex) { // 선택된 row index
+		setTitle("Book Edit Dialog");
 		setSize(300, 200);
-		setLayout(new GridLayout(5, 2));
-		setLocationRelativeTo(parent);	// 부모에 맞게 위치 조정
-		
-		// 선택된 row 의 각 항목의 값을 구하고 JTextFile 객체를 생성하면서 값을 전달
-		String bookId = (String) tableModel.getValueAt(rowIndex, 0);
-		String bookName = (String) tableModel.getValueAt(rowIndex, 1);
-		String publisher = (String) tableModel.getValueAt(rowIndex, 2);
-		String price = (String) tableModel.getValueAt(rowIndex, 3);
+		setLayout(new BorderLayout());
+		setLocationRelativeTo(parent); // 부모에 맞게
+
+		// 선택된 book 의 bookId 로 book table 에서 조회
+		Integer bookId = (Integer) tableModel.getValueAt(rowIndex, 0);
+		Book book = parent.detailBook(bookId);
+
+		// input panel
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new GridLayout(4, 2));
 
 		// field
-		bookIdField = new JTextField(bookId);
-		bookNameField = new JTextField(bookName);
-		publisherField = new JTextField(publisher);
-		priceField = new JTextField(price);
-		
+		bookIdField = new JTextField(String.valueOf(bookId)); // 정수 -> 문자열
+		bookIdField.setEditable(false);
+		bookNameField = new JTextField(book.getBookName());
+		publisherField = new JTextField(book.getPublisher());
+		priceField = new JTextField(String.valueOf(book.getPrice())); // 정수 -> 문자열
+
+		// add field with label, button
+		inputPanel.add(new JLabel("Book Id"));
+		inputPanel.add(bookIdField);
+		inputPanel.add(new JLabel("Book Name"));
+		inputPanel.add(bookNameField);
+		inputPanel.add(new JLabel("Publisher"));
+		inputPanel.add(publisherField);
+		inputPanel.add(new JLabel("Price"));
+		inputPanel.add(priceField);
+
+		// button panel
+		JPanel buttonPanel = new JPanel();
+
 		// button
-		saveButton = new JButton("Save");
-		
-		// add field with label
-		add(new JLabel("Book ID"));
-		add(bookIdField);
-		add(new JLabel("Book Name"));
-		add(bookNameField);
-		add(new JLabel("Publisher"));
-		add(publisherField);
-		add(new JLabel("Price"));
-		add(priceField);
-		add(new JLabel(""));
-		add(saveButton);
-		
-		// add button actionListner
-		saveButton.addActionListener(e -> {
-			tableModel.setValueAt(bookIdField.getText(), rowIndex, 0);
-			tableModel.setValueAt(bookNameField.getText(), rowIndex, 1);
-			tableModel.setValueAt(publisherField.getText(), rowIndex, 2);
-			tableModel.setValueAt(priceField.getText(), rowIndex, 3);
-			
-			dispose();	// 실행 후 창 자동 닫기
+		updateButton = new JButton("수정");
+		deleteButton = new JButton("삭제");
+		buttonPanel.add(updateButton);
+		buttonPanel.add(deleteButton);
+
+		// add inputPanel, buttonPanel to Dialog
+		add(inputPanel, BorderLayout.CENTER);
+		add(buttonPanel, BorderLayout.SOUTH);
+
+		// update, delete button actionListner
+		updateButton.addActionListener(e -> {
+
+			int ret = JOptionPane.showConfirmDialog(this, "수정할까요?", "수정 확인", JOptionPane.YES_NO_OPTION);
+			if (ret == JOptionPane.YES_OPTION) {
+//              int curBookId = Integer.parseInt(bookIdField.getText());
+				String bookName = bookNameField.getText();
+				String publisher = publisherField.getText();
+				int price = Integer.parseInt(priceField.getText());
+
+				parent.updateBook(new Book(bookId, bookName, publisher, price)); // 위쪽에 선언된(선택된 row에서) 변수를 사용
+				dispose();
+			}
+		});
+
+		deleteButton.addActionListener(e -> {
+
+			int ret = JOptionPane.showConfirmDialog(this, "삭제할까요?", "삭제 확인", JOptionPane.YES_NO_OPTION);
+			if (ret == JOptionPane.YES_OPTION) {
+
+				parent.deleteBook(bookId); // 위쪽에 선언된(선택된 row에서) 변수를 사용
+				dispose();
+			}
 		});
 	}
 }
-
-
-
-
-
-
-
-
-
-
-

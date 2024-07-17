@@ -1,67 +1,67 @@
 package app.book.ui;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import app.book.dto.Book;
 
-public class AddBookDialog extends JDialog{
+public class AddBookDialog extends JDialog {
 	private JTextField bookIdField, bookNameField, publisherField, priceField;
 	private JButton addButton;
-	
-	
-	public AddBookDialog(JFrame parent, DefaultTableModel tableModel) {
+
+	public AddBookDialog(BookManager parent, DefaultTableModel tableModel) {
 		setTitle("Book Add Dialog");
 		setSize(300, 200);
-		setLayout(new GridLayout(5, 2));
-		setLocationRelativeTo(parent);	// 부모에 맞게 위치 조정
-		
+		setLayout(new BorderLayout());
+		setLocationRelativeTo(parent); // 부모에 맞게
+
+		// input panel
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new GridLayout(4, 2));
+
 		// field
 		bookIdField = new JTextField();
 		bookNameField = new JTextField();
 		publisherField = new JTextField();
 		priceField = new JTextField();
-		
+
+		// add field with label, button
+		inputPanel.add(new JLabel("Book Id"));
+		inputPanel.add(bookIdField);
+		inputPanel.add(new JLabel("Book Name"));
+		inputPanel.add(bookNameField);
+		inputPanel.add(new JLabel("Publisher"));
+		inputPanel.add(publisherField);
+		inputPanel.add(new JLabel("Price"));
+		inputPanel.add(priceField);
+
+		// button panel
+		JPanel buttonPanel = new JPanel();
+
 		// button
 		addButton = new JButton("Add");
-		
-		// add field with label
-		add(new JLabel("Book ID"));
-		add(bookIdField);
-		add(new JLabel("Book Name"));
-		add(bookNameField);
-		add(new JLabel("Publisher"));
-		add(publisherField);
-		add(new JLabel("Price"));
-		add(priceField);
-		add(new JLabel(""));
-		add(addButton);
-		
+
+		buttonPanel.add(addButton);
+		// add inputPanel, buttonPanel to Dialog
+		add(inputPanel, BorderLayout.CENTER);
+		add(buttonPanel, BorderLayout.SOUTH);
+
 		// add button actionListner
 		addButton.addActionListener(e -> {
-			String bookId = bookIdField.getText();
+			int bookId = Integer.parseInt(bookIdField.getText());
 			String bookName = bookNameField.getText();
 			String publisher = publisherField.getText();
-			String price = priceField.getText();
-			
-			tableModel.addRow(new Object[] {bookId, bookName, publisher, price});
-			
-			dispose();	// 실행 후 창 자동 닫기
+			int price = Integer.parseInt(priceField.getText());
+
+			parent.insertBook(new Book(bookId, bookName, publisher, price));
+
+			dispose();
 		});
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
