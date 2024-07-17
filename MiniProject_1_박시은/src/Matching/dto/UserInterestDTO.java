@@ -3,6 +3,8 @@ package Matching.dto;
 public class UserInterestDTO {
 	private String userId;
     private int interestId;
+    private String category;
+    private String name;
     
     public UserInterestDTO() {}
     
@@ -10,6 +12,8 @@ public class UserInterestDTO {
 		super();
 		this.userId = userId;
 		this.interestId = interestId;
+		this.category = category;
+        this.name = name;
 	}
 
 	public String getUserId() {
@@ -24,10 +28,24 @@ public class UserInterestDTO {
 		return interestId;
 	}
 
-	public void setInterest_Id(int interestId) {
+	public void setInterestId(int interestId) {
 		this.interestId = interestId;
 	}
     
-    
+	public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
 }

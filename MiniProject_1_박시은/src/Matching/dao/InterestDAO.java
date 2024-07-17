@@ -12,7 +12,17 @@ import Matching.common.DBManager;
 
 public class InterestDAO {
 
-	public List<InterestDTO> listInterest(){
+	public void addInterest(InterestDTO interest) throws SQLException {
+		String sql = "INSERT INTO interests (category, name) VALUES (?, ?)";
+
+		try (Connection con = DBManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setString(1, interest.getCategory());
+			pstmt.setString(2, interest.getName());
+			pstmt.executeUpdate();
+		}
+	}
+
+	public List<InterestDTO> listInterest() {
 		List<InterestDTO> list = new ArrayList<>();
 
 		String sql = "select * from interests; ";

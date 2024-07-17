@@ -42,6 +42,7 @@ public class MainFrameManager extends JFrame {
 		setSize(800, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
+		setLocationRelativeTo(null);
 
 		mainPanel = new JPanel();
 		showLoginPanel();
@@ -112,12 +113,21 @@ public class MainFrameManager extends JFrame {
 	private void showInterestPanel(UserDTO user) {
 		mainPanel.removeAll();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(new InterestPanel(user), BorderLayout.CENTER);
+        mainPanel.add(new InterestPanel(user, this), BorderLayout.CENTER);
 
         mainPanel.revalidate();
         mainPanel.repaint();
 	}
 
+	public void showRecommendationPanel(UserDTO user) {
+        mainPanel.removeAll();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(new RecommendationPanel(user), BorderLayout.CENTER);
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
