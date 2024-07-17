@@ -83,7 +83,7 @@ public class MainFrameManager extends JFrame {
 				} else if (!user.getPassword().equals(PassWord)) {
 					JOptionPane.showMessageDialog(this, "비밀번호가 틀렸습니다.");
 				} else {
-					showInterestPanel();
+					showInterestPanel(user);
 				}
 			} catch (SQLException ex) {
 				ex.printStackTrace();
@@ -109,10 +109,10 @@ public class MainFrameManager extends JFrame {
 		}
 	}
 
-	private void showInterestPanel() {
+	private void showInterestPanel(UserDTO user) {
 		mainPanel.removeAll();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(new InterestPanel(this), BorderLayout.CENTER);
+        mainPanel.add(new InterestPanel(user), BorderLayout.CENTER);
 
         mainPanel.revalidate();
         mainPanel.repaint();
