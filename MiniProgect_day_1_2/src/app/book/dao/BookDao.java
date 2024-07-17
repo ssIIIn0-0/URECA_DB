@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import app.book.common.DBManager;
 import app.book.dto.Book;
 
 // book table 에 대한 crud
 public class BookDao {
+
 	public int insertBook(Book book) {
 		int ret = -1;
 		String sql = "insert into book values ( ?, ?, ?, ? ); ";
@@ -48,6 +50,7 @@ public class BookDao {
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
+
 			pstmt.setString(1, book.getBookName());
 			pstmt.setString(2, book.getPublisher());
 			pstmt.setInt(3, book.getPrice());
@@ -74,6 +77,7 @@ public class BookDao {
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
+
 			pstmt.setInt(1, bookId);
 
 			ret = pstmt.executeUpdate();
@@ -99,6 +103,39 @@ public class BookDao {
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBookId(rs.getInt("bookid"));
+				book.setBookName(rs.getString("bookname"));
+				book.setPublisher(rs.getString("publisher"));
+				book.setPrice(rs.getInt("price"));
+				list.add(book);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(pstmt, con);
+		}
+
+		return list;
+	}
+
+	public List<Book> listBook(String searchWord) {
+		List<Book> list = new ArrayList<>();
+
+		String sql = "select * from book where bookname like ?; "; // % 사용 X
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "%" + searchWord + "%");
 
 			rs = pstmt.executeQuery();
 			while (rs.next()) {

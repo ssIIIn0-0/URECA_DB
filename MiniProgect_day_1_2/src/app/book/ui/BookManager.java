@@ -1,6 +1,7 @@
 package app.book.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,10 +10,12 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame; // windows application
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,7 +26,8 @@ public class BookManager extends JFrame {
 
 	private JTable table; // grid ui component
 	private DefaultTableModel tableModel; // grid data
-	private JButton addButton, editButton, listButton;
+	private JButton searchButton, addButton, editButton, listButton;
+	private JTextField searchWordField;
 
 	// bookDao
 	private BookDao bookDao = new BookDao();
@@ -50,6 +54,17 @@ public class BookManager extends JFrame {
 		// DB 로부터 현재 book 테이블에 있는 데이터를 가져와서 보여준다.
 		listBook();
 
+		// search
+		Dimension textFieldSize = new Dimension(400, 28); // 검색창의 크기를 결정
+		searchWordField = new JTextField();
+		searchWordField.setPreferredSize(textFieldSize);
+		searchButton = new JButton("검색");
+
+		JPanel searchPanel = new JPanel();
+		searchPanel.add(new JLabel("제목 검색"));
+		searchPanel.add(searchWordField);
+		searchPanel.add(searchButton);
+
 		// button
 		addButton = new JButton("등록");
 		editButton = new JButton("수정 & 삭제");
@@ -66,12 +81,19 @@ public class BookManager extends JFrame {
 
 		// BookManager 의 layout 설정
 		setLayout(new BorderLayout());
-//		add(table, BorderLayout.CENTER);
+		add(searchPanel, BorderLayout.NORTH);
 		add(new JScrollPane(table), BorderLayout.CENTER); // table < scroll pane < jframe
 		add(buttonPanel, BorderLayout.SOUTH);
 
 		// button action event 처리
 		// 함수형 인터페이스이므로 람다를 사용할 수 있다.
+		searchButton.addActionListener(e -> {
+			String searchWord = searchWordField.getText();
+			if (!searchWord.isBlank()) {
+				listBook(searchWord);
+			}
+		});
+
 		addButton.addActionListener(e -> {
 //			System.out.println("addButton!!");
 			// AddBookDialog를 띄운다.
@@ -117,6 +139,18 @@ public class BookManager extends JFrame {
 		clearTable();
 
 		List<Book> bookList = bookDao.listBook();
+
+		for (Book book : bookList) {
+			tableModel.addRow(
+					new Object[] { book.getBookId(), book.getBookName(), book.getPublisher(), book.getPrice() });
+		}
+	}
+
+	private void listBook(String searchWor) {
+		// 현재 tableModel 을 정리하고
+		clearTable();
+
+		List<Book> bookList = bookDao.listBook(searchWor);
 
 		for (Book book : bookList) {
 			tableModel.addRow(
