@@ -53,14 +53,14 @@ public class MainFrameManager extends JFrame {
 	private void showLoginPanel() {
 		mainPanel.removeAll();
 		mainPanel.setLayout(new GridLayout(4, 2));
-		
+
 		// 로그인 화면
 		JLabel idLabel = new JLabel("ID");
-        JTextField idField = new JTextField();
-        JLabel passwordLabel = new JLabel("Password");
-        JPasswordField passwordField = new JPasswordField();
-        
-        JButton signUpButton = new JButton("sign up");
+		JTextField idField = new JTextField();
+		JLabel passwordLabel = new JLabel("Password");
+		JPasswordField passwordField = new JPasswordField();
+
+		JButton signUpButton = new JButton("sign up");
 		JButton signInButton = new JButton("sign in");
 
 		// button action event
@@ -72,7 +72,7 @@ public class MainFrameManager extends JFrame {
 		signInButton.addActionListener(e -> {
 			String Id = idField.getText();
 			String PassWord = new String(passwordField.getPassword());
-			
+
 			if (Id.isBlank() || PassWord.isBlank()) {
 				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력하세요.");
 			}
@@ -100,7 +100,7 @@ public class MainFrameManager extends JFrame {
 		mainPanel.add(signInButton);
 
 		mainPanel.revalidate();
-        mainPanel.repaint();
+		mainPanel.repaint();
 	}
 
 	void signupUser(UserDTO userdto) {
@@ -110,24 +110,33 @@ public class MainFrameManager extends JFrame {
 		}
 	}
 
-	private void showInterestPanel(UserDTO user) {
+	private void showInterestPanel(UserDTO userdto) {
 		mainPanel.removeAll();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(new InterestPanel(user, this), BorderLayout.CENTER);
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.add(new InterestPanel(userdto, this), BorderLayout.CENTER);
 
-        mainPanel.revalidate();
-        mainPanel.repaint();
+		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
-	public void showRecommendationPanel(UserDTO user) {
-        mainPanel.removeAll();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(new RecommendationPanel(user), BorderLayout.CENTER);
+	public void showProfilePanel(UserDTO userdto) {
+		mainPanel.removeAll();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.add(new ProfilePanel(userdto, this), BorderLayout.CENTER);
 
-        mainPanel.revalidate();
-        mainPanel.repaint();
-    }
-	
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
+
+	public void showRecommendationPanel(UserDTO userdto) {
+		mainPanel.removeAll();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.add(new RecommendationPanel(userdto), BorderLayout.CENTER);
+
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override

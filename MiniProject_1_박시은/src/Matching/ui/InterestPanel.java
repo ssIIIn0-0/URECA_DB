@@ -34,7 +34,7 @@ public class InterestPanel extends JPanel {
 	private JButton addInterestButton;
 	private JButton deleteInterestButton;
 	private JButton newInterestButton;
-	private JButton recommendButton;
+	private JButton profileButton;
 	private UserDTO user;
 	private MainFrameManager parent;
 	private InterestDAO interestDao = new InterestDAO();
@@ -101,16 +101,16 @@ public class InterestPanel extends JPanel {
 			listInterest(); // Refresh the interest table after adding a new interest
 		});
 		
-		// 비슷한 관심사를 가진 친구 추천 버튼
-		recommendButton = new JButton("비슷한 취미를 가진 친구추천받기");
-        recommendButton.addActionListener(e -> parent.showRecommendationPanel(user));
+		// 프로필 생성 버튼
+		profileButton = new JButton("프로필 생성하기");
+        profileButton.addActionListener(e -> parent.showProfilePanel(user));
 
 		// Button Panel
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(newInterestButton);
 		buttonPanel.add(addInterestButton);
 		buttonPanel.add(deleteInterestButton);
-		buttonPanel.add(recommendButton);
+		buttonPanel.add(profileButton);
 
 		add(tablesPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
