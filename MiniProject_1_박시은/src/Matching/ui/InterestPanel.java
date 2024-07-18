@@ -139,8 +139,9 @@ public class InterestPanel extends JPanel {
 	private void deleteSelectedInterest() {
 		int selectedRow = userInterestTable.getSelectedRow();
 		if (selectedRow != -1) {
-			int interestId = (int) userInterestTableModel.getValueAt(selectedRow, 0);
-			UserInterestDTO userInterest = new UserInterestDTO(user.getUserId(), interestId);
+			String category = (String) userInterestTableModel.getValueAt(selectedRow, 1);
+            String name = (String) userInterestTableModel.getValueAt(selectedRow, 2);
+            UserInterestDTO userInterest = new UserInterestDTO(user.getUserId(), category, name);
 			try {
 				userInterestDao.deleteUserInterest(userInterest);
 				JOptionPane.showMessageDialog(this, "선택한 취미가 삭제되었습니다.", "Success", JOptionPane.INFORMATION_MESSAGE);

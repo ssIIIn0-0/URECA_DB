@@ -16,6 +16,12 @@ public class UserInterestDTO {
         this.name = name;
 	}
 
+	public UserInterestDTO(String userId, String category, String name) {
+        this.userId = userId;
+        this.category = category;
+        this.name = name;
+    }
+	
 	public String getUserId() {
 		return userId;
 	}
