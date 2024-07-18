@@ -28,11 +28,11 @@ public class NewInterestDialog extends JDialog {
 
 		// Input Panel
 		JPanel inputPanel = new JPanel(new GridLayout(3, 2));
-		inputPanel.add(new JLabel("Category:"));
+		inputPanel.add(new JLabel("Category", JLabel.CENTER));
 		categoryField = new JTextField();
 		inputPanel.add(categoryField);
 
-		inputPanel.add(new JLabel("Name:"));
+		inputPanel.add(new JLabel("Name", JLabel.CENTER));
 		nameField = new JTextField();
 		inputPanel.add(nameField);
 

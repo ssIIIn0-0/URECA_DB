@@ -2,6 +2,7 @@ package Matching.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame; // windows application
@@ -33,7 +36,9 @@ public class MainFrameManager extends JFrame {
 //	private JButton signUpButton, signInButton;
 //	private JTextField idField, passwordField;
 	private UserDAO userDao = new UserDAO();
+	private JFrame mainFrame;
 	private JPanel mainPanel;
+	private Font Font;
 
 	public MainFrameManager() {
 
@@ -44,6 +49,8 @@ public class MainFrameManager extends JFrame {
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
 
+		Font = new Font("Arial", Font.BOLD, 16); // 글자 크기 설정
+		
 		mainPanel = new JPanel();
 		showLoginPanel();
 
@@ -53,15 +60,19 @@ public class MainFrameManager extends JFrame {
 	private void showLoginPanel() {
 		mainPanel.removeAll();
 		mainPanel.setLayout(new GridLayout(4, 2));
-
+		
 		// 로그인 화면
-		JLabel idLabel = new JLabel("ID");
+		JLabel idLabel = new JLabel("ID", JLabel.CENTER);
+		idLabel.setFont(Font);
 		JTextField idField = new JTextField();
-		JLabel passwordLabel = new JLabel("Password");
+		JLabel passwordLabel = new JLabel("Password", JLabel.CENTER);
+		passwordLabel.setFont(Font);
 		JPasswordField passwordField = new JPasswordField();
 
 		JButton signUpButton = new JButton("sign up");
+		signUpButton.setFont(Font);
 		JButton signInButton = new JButton("sign in");
+		signInButton.setFont(Font);
 
 		// button action event
 		signUpButton.addActionListener(e -> {
@@ -129,12 +140,24 @@ public class MainFrameManager extends JFrame {
 	}
 
 	public void showRecommendationPanel(UserDTO userdto) {
-		mainPanel.removeAll();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(new RecommendationPanel(userdto), BorderLayout.CENTER);
+		RecommendationDialog dialog = new RecommendationDialog(mainFrame);
+		dialog.setVisible(true);
 
-		mainPanel.revalidate();
-		mainPanel.repaint();
+		// Delayed execution to show RecommendationPanel after 3 seconds
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				SwingUtilities.invokeLater(() -> {
+					mainPanel.removeAll();
+					mainPanel.setLayout(new BorderLayout());
+					mainPanel.add(new RecommendationPanel(userdto), BorderLayout.CENTER);
+
+					mainPanel.revalidate();
+					mainPanel.repaint();
+				});
+			}
+		}, 3000);
 	}
 
 	public static void main(String[] args) {

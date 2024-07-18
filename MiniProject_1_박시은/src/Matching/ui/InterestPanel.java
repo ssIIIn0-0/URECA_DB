@@ -1,6 +1,7 @@
 package Matching.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -39,15 +41,17 @@ public class InterestPanel extends JPanel {
 	private MainFrameManager parent;
 	private InterestDAO interestDao = new InterestDAO();
 	private UserInterestDAO userInterestDao = new UserInterestDAO();
+	private Font Font;
 
 	public InterestPanel(UserDTO user, MainFrameManager parent) {
 		this.user = user;
 		this.parent = parent;
 		setLayout(new BorderLayout());
-
+		setBorder(new EmptyBorder(50, 15, 10, 15)); // 여백 추가
+		Font = new Font("돋움", Font.BOLD, 16); // 글자 크기 설정
+		
 		// Interests Table
 		interestTableModel = new DefaultTableModel(new Object[] { "Interest ID", "Category", "Name" }, 0) {
-			// table을 더블클릭 시 edit 상태가 되는 것을 방지
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false; // All cells are not editable
@@ -69,8 +73,10 @@ public class InterestPanel extends JPanel {
 		listUserInterests();
 
 		// 테이블 당 라벨 추가
-		JLabel interestLabel = new JLabel("취미 종류", JLabel.CENTER);
-		JLabel userInterestLabel = new JLabel("선택한 취미", JLabel.CENTER);
+		JLabel interestLabel = new JLabel("취미, 관심 종류", JLabel.CENTER);
+		interestLabel.setFont(Font);
+		JLabel userInterestLabel = new JLabel("선택한 취미, 관심", JLabel.CENTER);
+		userInterestLabel.setFont(Font);
 
 		JPanel interestTablePanel = new JPanel(new BorderLayout());
 		interestTablePanel.add(interestLabel, BorderLayout.NORTH);
@@ -82,8 +88,8 @@ public class InterestPanel extends JPanel {
 
 		// 테이블 위치 수정
 		JPanel tablesPanel = new JPanel(new GridLayout(1, 2));
-		tablesPanel.add(new JScrollPane(interestTable));
-		tablesPanel.add(new JScrollPane(userInterestTable));
+		tablesPanel.add(interestTablePanel);
+		tablesPanel.add(userInterestTablePanel);
 
 		// 관심사 추가버튼
 		addInterestButton = new JButton("취미 추가하기");
@@ -100,10 +106,10 @@ public class InterestPanel extends JPanel {
 			dialog.setVisible(true);
 			listInterest(); // Refresh the interest table after adding a new interest
 		});
-		
+
 		// 프로필 생성 버튼
 		profileButton = new JButton("프로필 생성하기");
-        profileButton.addActionListener(e -> parent.showProfilePanel(user));
+		profileButton.addActionListener(e -> parent.showProfilePanel(user));
 
 		// Button Panel
 		JPanel buttonPanel = new JPanel();
@@ -140,8 +146,8 @@ public class InterestPanel extends JPanel {
 		int selectedRow = userInterestTable.getSelectedRow();
 		if (selectedRow != -1) {
 			String category = (String) userInterestTableModel.getValueAt(selectedRow, 1);
-            String name = (String) userInterestTableModel.getValueAt(selectedRow, 2);
-            UserInterestDTO userInterest = new UserInterestDTO(user.getUserId(), category, name);
+			String name = (String) userInterestTableModel.getValueAt(selectedRow, 2);
+			UserInterestDTO userInterest = new UserInterestDTO(user.getUserId(), category, name);
 			try {
 				userInterestDao.deleteUserInterest(userInterest);
 				JOptionPane.showMessageDialog(this, "선택한 취미가 삭제되었습니다.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -168,8 +174,7 @@ public class InterestPanel extends JPanel {
 		try {
 			List<UserInterestDTO> userInterestList = userInterestDao.getUserInterests(user.getUserId());
 			for (UserInterestDTO ui : userInterestList) {
-				userInterestTableModel
-						.addRow(new Object[] { ui.getUserId(), ui.getCategory(), ui.getName() });
+				userInterestTableModel.addRow(new Object[] { ui.getUserId(), ui.getCategory(), ui.getName() });
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
