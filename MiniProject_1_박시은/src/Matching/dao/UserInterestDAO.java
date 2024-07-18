@@ -28,15 +28,16 @@ public class UserInterestDAO {
 	}
 
 	public void deleteUserInterest(UserInterestDTO userInterest) throws SQLException {
-        String sql = "DELETE FROM user_interests WHERE user_id = ? AND interest_id = (SELECT interest_id FROM interests WHERE category = ? AND name = ?)";
+		String sql = "DELETE ui FROM user_interests ui " + "JOIN interests i ON ui.interest_id = i.interest_id "
+				+ "WHERE ui.user_id = ? AND i.category = ? AND i.name = ?";
 
-        try (Connection con = DBManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setString(1, userInterest.getUserId());
-            pstmt.setString(2, userInterest.getCategory());
-            pstmt.setString(3, userInterest.getName());
-            pstmt.executeUpdate();
-        }
-    }
+		try (Connection con = DBManager.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setString(1, userInterest.getUserId());
+			pstmt.setString(2, userInterest.getCategory());
+			pstmt.setString(3, userInterest.getName());
+			pstmt.executeUpdate();
+		}
+	}
 
 	public List<UserInterestDTO> getUserInterests(String userId) throws SQLException {
 		List<UserInterestDTO> userInterests = new ArrayList<>();
