@@ -33,3 +33,18 @@ SELECT	*
 FROM	Users; -- 2 row
 
 commit;
+
+-- READ COMMITED vs REPEATABLE COMMITED
+-- 트랜잭션 격리 수준에는 4가지가 있다.
+-- level 0. READ UNCOMMITTED
+-- level 1. READ COMMITTED
+-- level 2. REPEATABLE READ
+-- level 3. SERIALIIZABLE
+-- 각각의 레벨에 따라 dirtyread, phantomread등을 허용, 금지하는 수준이 달라진다.
+
+-- 그중에서 READ COMMITED, REPEATABLE COMMITED 은 각각
+-- READ COMMITTED : Dirty Read 방지, Non-repeatable Read 허용
+-- REPEATABLE READ: Dirty Read 방지, Non-repeatable Read 방지, Phantom Read 방지 (MySQL InnoDB에서만)
+-- 의 고립 수준을 결정한다.
+
+-- 추가 : DBMS마다 이러한 고립 수준을 결정하는 명령어가 다를 수 있고, 해당 격리 수준은 MySQL에서 해당한다.
